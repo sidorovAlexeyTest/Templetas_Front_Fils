@@ -1,2 +1,2 @@
-# Templetas_Front_Fils
+# Templates_Front_Fils
 Nothing special, just garbage
