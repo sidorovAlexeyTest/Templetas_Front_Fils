@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="ru">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" charset="UTF-8">
+    <title>Admin page</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+</head>
+
+<body>
+
+
+    <header class="container-fluid bg-dark">
+        <div class="row">
+            <div class="col-4 d-flex align-items-center">
+                <span class="text-white  align-items-center" th:value="${}"></span>
+                <span class="text-white align-items-center">&nbsp;with role:&nbsp;<span
+                        class="text-white align-items-center" th:value=${}></span></span>
+            </div>
+            <div class="col-4"></div>
+            <div class="col-4">
+                <form class="d-flex justify-content-end" method="post" action="/logout">
+                    <input class="text-muted btn btn-dark" type="submit" value="Logout">
+                </form>
+            </div>
+        </div>
+    </header>
+
+
+    <div class="container-fluid">
+        <div class="row">
+
+
+            <div class="col-2 p-0 pt-3">
+                <ul class="list-group">
+                    <a href="D:/test/htmls/templates/user_page.html" th:href="@{/user/{name}(name=${currentUserName})}"
+                        class="list-group-item list-group-item-action">
+                        User
+                    </a>
+                    <a sec:authorize="hasRole('ADMIN')" href="D:/test/htmls/templates/admin_page.html"
+                        class="list-group-item list-group-item-action active">
+                        Admin
+                    </a>
+                </ul>
+            </div>
+
+
+            <div class="col-10">
+                <p>
+                    <h1 class="text-weght-bold">Admin panel</h1>
+                </p>
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Admin panel</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">New User</a>
+                    </li>
+                </ul>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th colspan="5" scope="col border-start">All users</th>
+                        </tr>
+                    </thead>
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Firs Name</th>
+                            <th scope="col">Last Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Role</th>
+                            <th scope="col">Edit</th>
+                            <th scope="col">Delete</th>
+                        </tr>
+                    </thead>
+                    <thead>
+                        <tr>
+                            <form data-th-object="${user}" action="#" data-id="1"
+                                th:action="@{/user/{username}(username=${user.getUsername()})}" th:method="PUT">
+                                <th scope="col" type="text" name="id" th:value="${user.getId()}" disabled></th>
+                                <th scope="col" type="text" name="name" th:value="${user.getUsername()}" />
+                                </th>
+                                <th scope="col" type="text" name="surname" th:value="${user.getSurname}" />
+                                </th>
+                                <th scope="col" type="tel" name="phoneNumber" th:value="${user.getPhoneNumber()}" />
+                                </th>
+                                <th scope="col" type="text" name="password" th:value="${user.getPassword()}" />
+                                </th>
+                                <th><button type="button" class="btn btn-info" data-id="1"
+                                        data-list="#list-1">Edit</button></th>
+                                <th><button type="button" class="btn btn-danger" data-list="#list-2">Delete</button>
+                                </th>
+                            </form>
+                        </tr>
+                    </thead>
+                </table>
+
+                <div class="container" id="list-1">
+                    <div class="row">
+                        <form th:object="${newUser}" th:method="POST" action="#" th:action="@{/admin/addUser}"
+                            class="d-none form">
+                            <p type="number"></p>
+                            <input type="text" name="username" id="name" />
+                            <input type="text" name="surname" id="surname" /></td>
+                            <input type="tel" name="phoneNumber" id="phoneNumber" />
+                            <input type="text" name="password" />
+                            <button type="submit" name="action" data-list="#list-1" value="addUser">Update user</button>
+                            <button type="submit" name="action" value="addAdmin">add admin</button>
+                            </td>
+                        </form>
+                    </div>
+                </div>
+                <table border="1">
+                    <tr>
+                        <td>Id</td>
+                        <td>Name</td>
+                        <td>Surname</td>
+                        <td>Birthdate</td>
+                        <td>Password(BCrypt)</td>
+                        <td>ROLE_USER</td>
+                        <td>ROLE_ADMIN</td>
+                    </tr>
+                    <tr data-th-each="user : ${userList}" class="d-none">
+                        <form action="#" th:action="@{/admin/updateUser/{id}(id=${user.getId()})}" th:method="PUT">
+                            <td data-th-text="${user.getId()}">...</td>
+                            <td><input type="text" name="username" th:value="${user.getUsername()}" />
+                            </td>
+                            <td><input type="text" name="surname" th:value="${user.getSurname}" /></td>
+                            <td><input type="tel" name="phoneNumber" th:value="${user.getPhoneNumber()}" /></td>
+                            <td><input type="text" name="password" th:value="${user.getPassword()}" />
+                            </td>
+                            <td><input type="checkbox" name="isROLE_USER"
+                                    th:checked="${user.getAuthorities().contains(user_role)}"></td>
+                            <td><input type="checkbox" name="isROLE_ADMIN"
+                                    th:checked="${user.getAuthorities().contains(admin_role)}"></td>
+                            <td>
+                                <input type="hidden" name="_method" value="PUT" id="updateButton">
+                                <button type="submit">Edit</button>
+                            </td>
+                        </form>
+                        <td>
+                            <form action="#" th:action="@{/admin/deleteUser/{id}(id=${user.getId()})}"
+                                th:method="DELETE">
+                                <input type="hidden" name="_method" value="DELETE" />
+                                <button type="submit">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="modal fade" id="modal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Title</h5>
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <span>&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body container">
+                                <div class="row">
+                                    <div class="col-1"></div>
+                                    <div class="col-10">
+                                        <form class="form">
+                                            <label for="username" class="d-flex justify-content-center">User
+                                                name</label>
+                                            <input type="text" name="username" class="form-control d-flex justify-content-center" />
+                                            <br />
+                                            <label for="surname" class="d-flex justify-content-center">Surname
+                                                name</label>
+                                            <input type="text" name="surname"
+                                                class="form-control d-flex justify-content-center" />
+                                            <br />
+                                            <label for="password" class="d-flex justify-content-center">Password</label>
+                                            <input type="text" name="password"
+                                                class="form-control d-flex justify-content-center" />
+                                            <br />
+                                            <button type="button" class="btn btn-danger justify-content-end">Click me</button>
+                                        </form>
+                                    </div>
+                                    <div class="col-1"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+                    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+                    crossorigin="anonymous">
+                </script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+                    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+                    crossorigin="anonymous">
+                </script>
+                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+                    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+                    crossorigin="anonymous">
+                </script>
+
+                <script>
+                    // после загрузки страницы
+                    document.addEventListener('DOMContentLoaded', function () {
+                        // элемент, содержащий контент модального окна (например, имеющий id="modal")
+                        const elemModal = document.querySelector('#modal');
+                        // активируем элемент в качестве модального окна с параметрами по умолчанию
+                        const modal = new bootstrap.Modal(elemModal);
+                        // при клике
+                        document.addEventListener('click', function (e) {
+                            // получим цель (элемент на который нажали)
+                            const target = e.target;
+                            // завершим выполнение функции, если цель не имеет атрибут data-list
+                            if (!target.dataset.list) {
+                                return;
+                            }
+                            // получим содержимое списка
+                            let newUser = document.querySelector(target.dataset.list).innerHTML;
+                            // установим .modal-body содержимое html
+                            let name = $()
+                            // elemModal.querySelector('.modal-body').innerHTML = "<div>" + newUser +
+                            //     "</div>";
+                            // откроем модальное окно
+                            modal.show();
+                        });
+                    });
+                </script>
+</body>
+
+</html>
