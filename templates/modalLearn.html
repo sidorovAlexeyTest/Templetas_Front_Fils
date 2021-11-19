@@ -18,10 +18,10 @@
         <li>Eleven</li>
         <li>Twelve</li>
     </ul>
-    <form id="list-1" class="d-none">
+    <form id="list-1" class="d-none" data-id="256">
         <input value="Alexey">
         <input value="Sidorov">
-        <button form="list-1" type="submit" data-id="256">Submit</button>
+        <button form="list-1" type="submit">Submit</button>
     </form>
 
     <table class="table">
@@ -29,14 +29,16 @@
             <td>Name</td>
             <td>Surname</td>
         </tr>
-        <tr id="23">
+        <tr id="256">
             <td name="name">Alexey</td>
             <td name="surname">Sidorov</td>
+            <td name="email">usermail.ru</td>
         </tr>
         <tr>
             <td>Ignat</td>
             <td>Petrov</td>
         </tr>
+        <button>Helo</button>
     </table>
 
     <p>Trying to cereate a modal window</p>
@@ -56,7 +58,9 @@
                 </div>
                 <div class="modal-body">
                     <form>
-                        <input data-id="name"/>
+                        <input type="text" id="user-name"/>
+                        <input type="text" id="user-surname"/>
+                        <input type="email" id="user-email"/>
                     </form>
                 </div>
                 <!-- <div class="modal-footer">
@@ -84,19 +88,31 @@
             // активируем элемент в качестве модального окна с параметрами по умолчанию
             const modal = new bootstrap.Modal(elemModal);
             $('button').click( function() {
-            var attr = $(this);
-            console.log(attr.attr("data-id"));
+            // var attr = $(this);
+            // console.log(attr.attr("data-id"));
             })
-            console.log("GHi");
+            // console.log("GHi");
             // при клике
             document.addEventListener('click', function (e) {
                 // получим цель (элемент на который нажали)
                 const target = e.target;
-                // завершим выполнение функции, если цель не имеет атрибут data-list
+                // console.log(target.tagName);
+                // // завершим выполнение функции, если цель не имеет атрибут data-list
                 if (!target.dataset.list) {
                     return;
                 }
-
+                console.log(target.dataset.index);
+                let user = $("#"+ target.dataset.index).children();
+                let name = user.get(0).textContent;
+                let surname = user.get(1).textContent;
+                let email = user.get(2).textContent;
+                $("#user-name").val(name);
+                $("#user-surname").val(surname);
+                $("#user-email").val(email);
+                console.log(user.get(0).textContent);
+                console.log(user.get(1).textContent);
+                console.log(user.get(2).textContent);
+                //console.log(user);
                 //let inputData = 
                 // получим содержимое списка
                 //let newUser = document.querySelector(target.dataset.list).innerHTML;
@@ -110,7 +126,7 @@
 
     
 
-    <button type="button" class="btn btn-primary" data-list="#list-1" data-id="256">modal с одним списком</button>
+    <button type="button" class="btn btn-primary" data-list="#list-1" data-index="256">modal с одним списком</button>
     <button type="button" class="btn btn-primary" data-list="#list-2">modal с другим списком</button>
 </body>
 </html>
